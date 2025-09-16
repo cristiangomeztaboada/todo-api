@@ -24,7 +24,7 @@ steps:
     - --set-env-vars
     - DB_USER=todo-user,DB_PASSWORD=Cristian1986!,DB_NAME=todo-db
 
-# Mueve el 'timeout' a este nivel, fuera de 'options'
+# timeout para permitir despliegues más largos si es necesario
 timeout: 1200s
 
 # Opciones para la compilación, incluyendo la solución para los logs
