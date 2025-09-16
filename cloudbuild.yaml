@@ -7,8 +7,8 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/$PROJECT_ID/todo-api']
 
-  # Paso 3: Despliega en Cloud Run, pasando los secretos de forma segura
-- name: 'gcr.io/google.com/cloudsdk/cloud-sdk'
+  # Paso 3: Despliega en Cloud Run, usando una imagen que no da problemas de permisos
+- name: 'google/cloud-sdk'
   args:
     - gcloud
     - run
