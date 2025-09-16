@@ -24,11 +24,12 @@ steps:
     - --set-env-vars
     - DB_USER=$_DB_USER_SECRET,DB_PASSWORD=$_DB_PASSWORD_SECRET
 
+timeout: '1200s'
+
 # Opciones para resolver el error de registros y evitar un timeout
 options:
   # Solución para el error de los logs: usa el bucket predeterminado
   default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
-  timeout: '1200s'
 
 # Lectura de los secretos de Secret Manager
 availableSecrets:
