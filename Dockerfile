@@ -7,8 +7,11 @@ COPY . .
 RUN npm run build
 
 # Etapa 2: Descargar e instalar el proxy de Cloud SQL
-FROM google/cloud-sdk:latest AS cloud_sql_proxy_installer
-RUN curl -o /usr/bin/cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 && chmod +x /usr/bin/cloud_sql_proxy
+# Usamos una imagen base ligera para solo descargar el proxy
+FROM alpine AS cloud_sql_proxy_downloader
+RUN apk add --no-cache curl && \
+    curl -o /usr/bin/cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 && \
+    chmod +x /usr/bin/cloud_sql_proxy
 
 # Etapa 3: Ejecutar la aplicación
 FROM node:18-alpine
@@ -20,7 +23,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 
 # Copia el proxy de la Etapa 2
-COPY --from=cloud_sql_proxy_installer /usr/bin/cloud_sql_proxy /usr/bin/cloud_sql_proxy
+COPY --from=cloud_sql_proxy_downloader /usr/bin/cloud_sql_proxy /usr/bin/cloud_sql_proxy
 
 # No incluyas credenciales aquí
 ENV DB_HOST=127.0.0.1
