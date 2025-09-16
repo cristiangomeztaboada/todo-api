@@ -1,28 +1,27 @@
-# Dockerfile
-# Stage 1: Build the application
-FROM node:18-alpine AS build
+# Usa una imagen base para el proxy
+FROM google/cloud-sdk:latest AS cloud_sql_proxy
+
+# Usa una imagen base para tu aplicación
+FROM node:18-alpine
+
+# Instala dependencias y construye la aplicación
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
 RUN npm run build
 
-# Stage 2: Run the application
-FROM node:18-alpine
-WORKDIR /app
-COPY --from=build /app/package*.json ./
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/dist ./dist
+# Copia el proxy desde la imagen anterior
+COPY --from=cloud_sql_proxy /usr/bin/cloud_sql_proxy /usr/bin/cloud_sql_proxy
 
-# Configuración de Cloud SQL Proxy
-RUN apk add --no-cache curl
-RUN curl -o /usr/bin/cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 && chmod +x /usr/bin/cloud_sql_proxy
+# Define las variables de entorno sin los valores
 ENV DB_HOST=127.0.0.1
 ENV DB_USER=todo-user
-ENV DB_PASSWORD=Cristian1986!
+ENV DB_PASSWORD=
 ENV DB_NAME=todo-db
 
-# Expose the port your app runs on
+# Exponer el puerto de la aplicación
 EXPOSE 8080
 
+# Comando para iniciar el proxy y tu aplicación
 CMD ["sh", "-c", "/usr/bin/cloud_sql_proxy -instances=woven-space-471718-k4:us-central1:todo-db-instance=tcp:5432 & node dist/main"]
