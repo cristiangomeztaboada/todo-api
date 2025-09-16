@@ -1,0 +1,23 @@
+steps:
+  # Paso 1: Construye la imagen de Docker para la API
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/todo-api', '.']
+
+  # Paso 2: Sube la imagen a Artifact Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/todo-api']
+
+  # Paso 3: Despliega la API en Cloud Run
+- name: 'gcr.io/google.com/cloudsdk/cloud-sdk'
+  args:
+    - gcloud
+    - run
+    - deploy
+    - todo-api
+    - --image
+    - gcr.io/$PROJECT_ID/todo-api
+    - --region
+    - us-central1
+    - --allow-unauthenticated
+    - --platform
+    - managed
