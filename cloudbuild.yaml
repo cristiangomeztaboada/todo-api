@@ -1,5 +1,5 @@
 steps:
-  # Paso 1: Construye la imagen de Docker de tu API
+  # Paso 1: Construye la imagen de Docker para la API
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/todo-api', '.']
 
