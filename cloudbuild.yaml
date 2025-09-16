@@ -7,14 +7,6 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/$PROJECT_ID/todo-api']
 
-# Lectura de los secretos de Secret Manager
-availableSecrets:
-  secretManager:
-  - versionName: projects/$PROJECT_ID/secrets/todo-user-secret/versions/latest
-    env: _DB_USER_SECRET
-  - versionName: projects/$PROJECT_ID/secrets/todo-password-secret/versions/latest
-    env: _DB_PASSWORD_SECRET
-    
   # Paso 3: Despliega en Cloud Run, pasando los secretos de forma segura
 - name: 'gcr.io/google.com/cloudsdk/cloud-sdk'
   args:
@@ -30,7 +22,7 @@ availableSecrets:
     - --platform
     - managed
     - --set-env-vars
-    - DB_USER=$_DB_USER_SECRET,DB_PASSWORD=$_DB_PASSWORD_SECRET
+    - DB_USER=todo-user,DB_PASSWORD=Cristian1986!
 
 # Mueve el 'timeout' a este nivel, fuera de 'options'
 timeout: 1200s
@@ -38,4 +30,3 @@ timeout: 1200s
 # Opciones para la compilación, incluyendo la solución para los logs
 options:
   default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
-
