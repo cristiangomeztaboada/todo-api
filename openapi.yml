@@ -1,0 +1,150 @@
+openapi: 3.0.0
+info:
+  title: Todo-list API
+  description: API para gestionar tareas.
+  version: "1.0"
+servers:
+- url: https://34.96.115.12.nip.io/api/todo
+paths:
+  /tasks:
+    get:
+      tags:
+      - tasks
+      summary: Obtener todas las tareas
+      description: Devuelve una lista completa de todas las tareas existentes.
+      operationId: TasksController_findAll
+      responses:
+        "200":
+          description: Lista de tareas obtenida con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+    post:
+      tags:
+      - tasks
+      summary: Crear una nueva tarea
+      operationId: TasksController_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskDto'
+      responses:
+        "201":
+          description: La tarea ha sido creada con éxito.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+  /tasks/{id}:
+    get:
+      tags:
+      - tasks
+      summary: Obtener una tarea por ID
+      operationId: TasksController_findOne
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Tarea encontrada y devuelta con éxito.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        "404":
+          description: Tarea no encontrada.
+    patch:
+      tags:
+      - tasks
+      summary: Actualizar una tarea
+      operationId: TasksController_update
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskDto'
+      responses:
+        "200":
+          description: La tarea ha sido actualizada con éxito.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        "404":
+          description: Tarea no encontrada.
+    delete:
+      tags:
+      - tasks
+      summary: Eliminar una tarea
+      operationId: TasksController_delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: La tarea ha sido eliminada con éxito.
+        "404":
+          description: Tarea no encontrada.
+components:
+  schemas:
+    Task:
+      type: object
+      required:
+      - id
+      - title
+      - completed
+      properties:
+        id:
+          type: number
+          description: El ID único de la tarea.
+          example: 1
+        title:
+          type: string
+          description: El título de la tarea.
+          example: Comprar leche
+        completed:
+          type: boolean
+          description: El estado de la tarea (completada o no).
+          example: false
+    CreateTaskDto:
+      type: object
+      required:
+      - title
+      properties:
+        title:
+          type: string
+          description: El título de la tarea.
+          example: Comprar leche
+        completed:
+          type: boolean
+          description: El estado de la tarea (completada o no).
+          example: false
+    UpdateTaskDto:
+      type: object
+      properties:
+        title:
+          type: string
+          description: El título de la tarea.
+          example: Comprar leche
+        completed:
+          type: boolean
+          description: El estado de la tarea (completada o no).
+          example: false

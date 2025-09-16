@@ -1,0 +1,224 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Todo-list API",
+        "description": "API para gestionar tareas.",
+        "version": "1.0",
+        "contact": {}
+    },
+    "host": "34.96.115.12.nip.io/api/todo",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/tasks": {
+            "get": {
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Obtener todas las tareas",
+                "description": "Devuelve una lista completa de todas las tareas existentes.",
+                "operationId": "TasksController_findAll",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de tareas obtenida con éxito.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Task"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Crear una nueva tarea",
+                "operationId": "TasksController_create",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CreateTaskDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "La tarea ha sido creada con éxito.",
+                        "schema": {
+                            "$ref": "#/definitions/Task"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/{id}": {
+            "get": {
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Obtener una tarea por ID",
+                "operationId": "TasksController_findOne",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tarea encontrada y devuelta con éxito.",
+                        "schema": {
+                            "$ref": "#/definitions/Task"
+                        }
+                    },
+                    "404": {
+                        "description": "Tarea no encontrada."
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Actualizar una tarea",
+                "operationId": "TasksController_update",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UpdateTaskDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "La tarea ha sido actualizada con éxito.",
+                        "schema": {
+                            "$ref": "#/definitions/Task"
+                        }
+                    },
+                    "404": {
+                        "description": "Tarea no encontrada."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Eliminar una tarea",
+                "operationId": "TasksController_delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "La tarea ha sido eliminada con éxito."
+                    },
+                    "404": {
+                        "description": "Tarea no encontrada."
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Task": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "description": "El ID único de la tarea.",
+                    "example": 1
+                },
+                "title": {
+                    "type": "string",
+                    "description": "El título de la tarea.",
+                    "example": "Comprar leche"
+                },
+                "completed": {
+                    "type": "boolean",
+                    "description": "El estado de la tarea (completada o no).",
+                    "example": false
+                }
+            },
+            "required": [
+                "id",
+                "title",
+                "completed"
+            ]
+        },
+        "CreateTaskDto": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "El título de la tarea.",
+                    "example": "Comprar leche"
+                },
+                "completed": {
+                    "type": "boolean",
+                    "description": "El estado de la tarea (completada o no).",
+                    "example": false
+                }
+            },
+            "required": [
+                "title"
+            ]
+        },
+        "UpdateTaskDto": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "El título de la tarea.",
+                    "example": "Comprar leche"
+                },
+                "completed": {
+                    "type": "boolean",
+                    "description": "El estado de la tarea (completada o no).",
+                    "example": false
+                }
+            }
+        }
+    }
+}
